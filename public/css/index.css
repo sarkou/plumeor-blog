@@ -1,0 +1,49 @@
+.myheader {
+  background-color: rgb(221, 85, 85);
+  color: white;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.myheader h1 a,
+ul li a {
+  color: white;
+}
+
+.container {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #ccc;
+}
+.article-container {
+  margin: 1rem 1rem;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+}
+.articles {
+  background-color: white;
+  flex: 0 0 33%;
+  margin: 1rem 1rem;
+  padding: 10px 10px;
+  width: 200px;
+  height: 400px;
+  cursor: pointer;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.div-img {
+  background-size: cover;
+  min-width: 200px;
+  min-height: 320px;
+  overflow: hidden;
+}
+.articles:hover {
+  transform: scale(1.1);
+}

@@ -1,0 +1,32 @@
+.maincontainer {
+  display: flex;
+  flex-flow: row nowrap;
+
+  align-items: center;
+  justify-content: center;
+
+  margin: 5px 5px;
+  position: relative;
+}
+.myform {
+  display: flex;
+  flex-flow: column;
+  margin: 4rem 4rem;
+  padding: 10px 10px;
+  background-color: white;
+}
+.center {
+  text-align: center;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+}
+.text-error {
+  color: red;
+}
+
+.text-error:hover::after {
+  content: attr(message-required);
+  position: fixed;
+}
