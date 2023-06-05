@@ -5,17 +5,24 @@
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 .myheader h1 a,
 ul li a {
   color: white;
 }
+li {
+  list-style: none;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
 .container {
   display: flex;
-  flex-flow: column;
-  justify-content: center;
-  align-items: center;
+  flex-flow: row wrap;
+
   min-height: 100vh;
   background-color: #ccc;
 }
@@ -25,25 +32,48 @@ ul li a {
   flex-flow: row wrap;
   justify-content: center;
   align-items: center;
+  width: 95%;
 }
 .articles {
+  display: flex;
+  flex-flow: column;
   background-color: white;
-  flex: 0 0 33%;
-  margin: 1rem 1rem;
+  width: 15%;
+  margin: 10px 10px;
   padding: 10px 10px;
-  width: 200px;
-  height: 400px;
+  width: 250px;
+  height: 350px;
   cursor: pointer;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  overflow: hidden;
 }
 
-.div-img {
+.articles div {
   background-size: cover;
+
   min-width: 200px;
   min-height: 320px;
-  overflow: hidden;
 }
 .articles:hover {
   transform: scale(1.1);
+}
+
+.text-category {
+  font-size: 1.9rem;
+  padding: 1rem 1rem;
+  color: #2c3e50;
+  text-align: center;
+}
+.display-category {
+  width: 15%;
+  margin-top: 3rem;
+  margin-left: 2rem;
+}
+.display-category h2 {
+  background-color: rgb(221, 85, 85);
+}
+.display-category li:hover {
+  color: rgb(221, 85, 85);
+  cursor: pointer;
 }
