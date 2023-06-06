@@ -176,7 +176,9 @@ require_once('./requires/head.php');
                 <label for="content">Contenu</label>
                 <span class="text-error" message-required="ce champ est obligatoire">*</span>
                 </br>
-                <textarea name="content" id="content" cols="30" rows="10" placeholder="écrivez votre article ici"></textarea>
+                <textarea name="content" id="content" cols="30" rows="10" placeholder="écrivez votre article ici"><?php if (isset($category)) {
+                                                                                                                        echo $category;
+                                                                                                                    } ?></textarea>
 
                 <?php
 

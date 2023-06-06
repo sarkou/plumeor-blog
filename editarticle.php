@@ -1,28 +1,34 @@
 <?php
-const ERROR_REQUIRED = 'Veuillez renseigner ce champ'; // le message d'erreur quand le champ est vide 
+const ERROR_REQUIRED = 'Veuillez renseigner ce champ';
 const ERROR_TITLE_TOO_SHORT = 'Le titre est trop court';
 const ERROR_CONTENT_TOO_SHORT = 'L\'article est trop court';
-const ERROR_IMAGE_URL = 'L\'image doit être une URL valide';
-
-// on met en place le chemin du fichier ou on va enregistrer les articles
+const ERROR_IMAGE_URL = 'L\'image doit être une url valide';
 $filename = './data/articles.json';
-if (file_exists($filename)) {
-    $articles = json_decode(file_get_contents($filename), true) ?? [];
-}
-
-// on initialise nos premières erreurs: ce sont les éléments sont vides
 $errors = [
     'title' => '',
     'image' => '',
     'category' => '',
     'content' => '',
 ];
+$category = '';
 
-//filter_input_array : Récupère plusieurs valeurs externes et les filtre
-// filter_input_array le premier parametre est obligatoire il concerne le type
-//ce type peut etre : Une constante parmi INPUT_GET, INPUT_POST, INPUT_COOKIE, INPUT_SERVER ou INPUT_ENV.
-// un deuxieme parametre non obligatoire qui peut être un tableau
+if (file_exists($filename)) {
+    $articles = json_decode(file_get_contents($filename), true) ?? [];
+}
+
+$_GET = filter_input_array(INPUT_GET, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+$id = $_GET['id'] ?? '';
+if ($id) {
+    $articleIndex = array_search($id, array_column($articles, 'id'));
+    $article = $articles[$articleIndex];
+    $title = $article['title'];
+    $image = $article['image'];
+    $category = $article['category'];
+    $content = $article['content'];
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
     $_POST = filter_input_array(INPUT_POST, [
         'title' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
         'image' => FILTER_SANITIZE_URL,
@@ -36,8 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $image = $_POST['image'] ?? '';
     $category = $_POST['category'] ?? '';
     $content = $_POST['content'] ?? '';
-
-
 
     if (!$title) {
         $errors['title'] = ERROR_REQUIRED;
@@ -61,41 +65,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['content'] = ERROR_CONTENT_TOO_SHORT;
     }
 
-    // emptyfunc() est la fonction de callback
-    //cette fonction ne retourne que les elements qui ne sont pas vides
-    function emptyfunc($myitem)
-    {
-        return (!empty($myitem));
-    }
-    //array_filter — Filtre les éléments d'un tableau grâce à une fonction de rappel
-    //array_filter Returns the filtered array
-    //syntaxe : array_filter(array, callbackfunction, flag)
-    //array : required ,  callbackfunction, flag : optional
-
-    if (empty(array_filter($errors, "emptyfunc"))) {
-        //if (empty(array_filter($errors))) { //façon simplifiée d'écrire sans fonction de callback et ça marche parfaitement
-        $articles = [...$articles, [
-            'title' => $title,
-            'image' => $image,
-            'category' => $category,
-            'content' => $content,
-            'id' => time()
-        ]];
-
+    if (empty(array_filter($errors, fn ($e) => $e !== ''))) {
+        if ($id) {
+            $articles[$articleIndex]['title'] = $title;
+            $articles[$articleIndex]['image'] = $image;
+            $articles[$articleIndex]['category'] = $category;
+            $articles[$articleIndex]['content'] = $content;
+        } else {
+            $articles = [...$articles, [
+                'title' => $title,
+                'image' => $image,
+                'category' => $category,
+                'content' => $content,
+                'id' => time()
+            ]];
+        }
         file_put_contents($filename, json_encode($articles));
         header('Location: /');
     }
 }
 
-
-
-
-
-
-
-
-
 ?>
+
+
+
+
+
 
 
 
@@ -106,7 +101,7 @@ require_once('./requires/head.php');
 
 <link rel="stylesheet" href="/public/css/index.css ">
 <link rel="stylesheet" href="/public/css/addarticle.css ">
-<title>ajouter article</title>
+<title>Modifier l'article</title>
 </head>
 
 <body>
@@ -117,15 +112,13 @@ require_once('./requires/head.php');
 
     <section class="maincontainer">
 
-        <form class="myform ombre" action="./addarticle.php" method="post">
-            <h2 class="center">Écrire un article</h2>
+        <form class="myform ombre" action="./editarticle.php<?= $id ? "?id=$id" : '' ?>" method="post">
+            <h2 class="center">Modifier un article</h2>
             <section class="p10 ">
                 <label for="title">Titre</label>
                 <span class="text-error" message-required="ce champ est obligatoire">*</span>
                 </br>
-                <input type="text" name="title" id="title" placeholder="titre de votre article" value="<?php if (isset($title)) {
-                                                                                                            echo $title;
-                                                                                                        } ?>" />
+                <input type="text" name="title" id="title" placeholder="titre de votre article" value="<?= $title ?? '' ?>" />
 
                 <?php if ($errors['title']) : ?>
                     <p class="text-error"><?= $errors['title'] ?></p>
@@ -139,9 +132,9 @@ require_once('./requires/head.php');
                 <label for="image">Image</label>
                 <span class="text-error" message-required="ce champ est obligatoire">*</span>
                 </br>
-                <input type="text" name="image" id="image" placeholder="url de votre image" value="<?php if (isset($image)) {
-                                                                                                        echo $image;
-                                                                                                    } ?>" />
+                <input type="text" name="image" id="image" placeholder="url de votre image" value="<?= $image ?? '' ?>" />
+
+
 
                 <?php if ($errors['image']) : ?>
                     <p class="text-error"><?= $errors['image'] ?></p>
@@ -155,14 +148,18 @@ require_once('./requires/head.php');
                 <span class="text-error" message-required="ce champ est obligatoire">*</span>
                 <br>
                 <select name="category" id="category">
-                    <option value="technologie">technologie</option>
-                    <option value="sante">Santé</option>
-                    <option value="histoire">Histoire</option>
-                    <option value="societe">Société</option>
-                    <option value="politique">Politique</option>
-                    <option value="economie">Économie</option>
-                    <option value="environnement">environnement</option>
-                    <option value="divers">Faits divers</option>
+
+                    <option <?= $category === 'technologie' ? 'selected' : '' ?>value="technologie">technologie</option>
+
+
+                    <option <?= $category === 'sante' ? 'selected' : '' ?>value="sante">Santé</option>
+
+                    <option <?= $category === 'histoire' ? 'selected' : '' ?>value="histoire">Histoire</option>
+                    <option <?= $category === 'societe' ? 'selected' : '' ?>value="societe">Société</option>
+                    <option <?= $category === 'politique' ? 'selected' : '' ?>value="politique">Politique</option>
+                    <option <?= $category === 'economie' ? 'selected' : '' ?> value="economie">Économie</option>
+                    <option <?= $category === 'environnement' ? 'selected' : '' ?>value="environnement">environnement</option>
+                    <option <?= $category === 'divers' ? 'selected' : '' ?> value="divers">Faits divers</option>
                 </select>
 
                 <?php if ($errors['category']) : ?>
@@ -176,7 +173,9 @@ require_once('./requires/head.php');
                 <label for="content">Contenu</label>
                 <span class="text-error" message-required="ce champ est obligatoire">*</span>
                 </br>
-                <textarea name="content" id="content" cols="30" rows="10" placeholder="écrivez votre article ici"></textarea>
+                <textarea name="content" id="content" cols="30" rows="10" placeholder="écrivez votre article ici"><?= $content ?? '' ?></textarea>
+
+
 
                 <?php
 
@@ -188,7 +187,7 @@ require_once('./requires/head.php');
 
 
             <section class="p10">
-                <button class="btn btn-danger" type="button">Annuler</button>
+                <a href="/" class="btn btn-danger">Annuler</a>
                 <button class="btn btn-primary" type="submit" name="mon">Sauvegarder</button>
             </section>
 

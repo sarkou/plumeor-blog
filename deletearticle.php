@@ -83,26 +83,17 @@ $articles = [];
 
 
         <section class="message-delete">
-
-            <h1 class="text-delete">êtes-vous sûr de vouloir supprimer cet article?</h1>
-            <p>Cette action est irreversible</p>
-
-
+            <section class="message-delete-center">
+                <h1 class="text-delete">Êtes-vous sûr de vouloir supprimer cet article?</h1>
+                <p class="paragraphe-delete">Cette action est irreversible</p>
 
 
+                <section class="mybutton">
+                    <a class="btn btn-danger " href="/deletearticle.php?id=<?= $myid ?>&supprimer=oui">OUI je supprime</a>
 
-
-
-
-
-
-
-
-            <a class="btn btn-danger " href="/deletearticle.php?id=<?= $myid ?>&supprimer=oui">Supprimer</a>
-
-            <a class="btn myretour" href="/article.php?id=<?= $myid ?>&ca=<?= $mycat ?>">Retour à l'article</a>
-
-
+                    <a class="btn myretour" href="/article.php?id=<?= $myid ?>&ca=<?= $mycat ?>">NON retour à l'article</a>
+                </section>
+            </section>
 
 
         </section>
