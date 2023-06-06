@@ -101,6 +101,10 @@ if (!$id) {
                     <div class="img-article-div" style="background-image:url(<?= $myarticle['image'] ?>)"></div>
 
                     <p class="article-content"><?= $myarticle['content'] ?></p>
+                    <div class="my-button">
+                        <a href="/addarticle.php?id=<?= $myarticle['id'] ?>" class="btn btn-modifier">Modifier</a>
+                        <a href="/deletearticle.php?id=<?= $myarticle['id'] ?>&ca=<?= $myarticle['category'] ?>" class="btn btn-delete">Supprimer</a>
+                    </div>
 
                 <?php endif ?>
             </article>

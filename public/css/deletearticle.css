@@ -1,0 +1,31 @@
+.main-delete {
+  height: 100vh;
+  background-color: #ccc;
+}
+.message-delete {
+  padding: 10px;
+  display: block;
+  margin-top: 5rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  height: 50%;
+  background-color: white;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  border-radius: 5px;
+}
+.text-delete .text-delete p {
+  text-align: center;
+}
+header {
+  position: relative;
+}
+footer {
+  position: absolute;
+  bottom: 0px;
+}
+.myretour {
+  background-color: #2c3e50;
+  color: white;
+}
